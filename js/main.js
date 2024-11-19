@@ -14,17 +14,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // run apply grid size
     setGridSize(STARTINGGRIDSIZE);
 
+
     // toggle borders on
     // set color
 
     // choose buttons
+    document.querySelector("#grid-size").addEventListener("click", chooseGridSize);
+    document.querySelector("#clear-grid").addEventListener("click", clearGrid);
+    document.querySelector("#choose-color").addEventListener("change", chooseColor);
+    document.querySelector("#cell-border").addEventListener("click", toggleCellBorder);
     // for each call random color
     // set box shadow to random color
 });
 
 
-// apply grid size
-function setGridSize (size) {
+function choosePixel() {
+    return Array.from(sketchArea.children);
+}
+
+function setGridSize(size) {
     for (let i = 0; i < size * size; i++) {
         let pixel = document.createElement("div");
         
@@ -43,17 +51,20 @@ function setGridSize (size) {
         sketchArea.appendChild(pixel);
 
         pixel.addEventListener("mouseover", () => {
-            changePixelColor(pixel);
+            setPixelColor(pixel);
         });
     }
+
 }
 
 
-function changePixelColor (pixel) {
+function setPixelColor(pixel, color="random") {    
     // - Set background color
     if (!pixel.style.background) {
-        let randomColor = generateRandomColorRGB();
-        pixel.style.background = `${randomColor}`;
+
+        color = "random" ? generateRandomColorRGB() : color;
+        pixel.style.background = `${color}`;
+        
     // - Mouseover again darken opacity by 10%
     } else {
         let background = pixel.style.background;
@@ -78,7 +89,7 @@ function changePixelColor (pixel) {
 }
 
 
-function generateRandomColorRGB () {
+function generateRandomColorRGB() {
     let r = Math.floor(Math.random() * 255);
     let g = Math.floor(Math.random() * 255);
     let b = Math.floor(Math.random() * 255);
@@ -86,34 +97,71 @@ function generateRandomColorRGB () {
     return `rgba(${r}, ${g}, ${b}, 0.1)`;
 }
 
-// choose grid size
-    // add eventlistener to button
-    // prompt for input between 4 and 100
-    // keep asking if input is incorrect
-    // clear grid
-    // apply grid size
+
+function chooseGridSize() { 
+    let value;
+    do {
+        value = prompt("Please input a number between 4 and 100: ");
+    } while (value > 100 || value < 4 || isNaN(value));
+
+    clearGrid();
+    setGridSize(value);
+}
 
 
-// choose color
-    // add eventlistener to button
-    // have user choose color
-    // run set color
+function chooseColor() {
+    clearGrid();
+
+    // get color value
+    let color = document.querySelector("#choose-color").value;
+    console.log(color);
+
+    // format color to rgb
+    colorRGBA = hexToRgba(color);
+
+    // change color on hover on pixels
+    const pixels = choosePixel();
+
+    pixels.forEach((pixel => {
+        pixel.addEventListener("mouseover", () => {
+            setPixelColor(pixel, color);
+        });
+    }))
+    
+}
+
+
+function hexToRgba(color) {
+    const r = parseInt(color.substr(1,2), 16);
+    const g = parseInt(color.substr(3,2), 16);
+    const b = parseInt(color.substr(5,2), 16);
+
+    return `rgba(${r}, ${g}, ${b}, 0.1)`;
+}
 
 // rainbow
     // add eventlistener to button
+    // reset choose color
     // generate random color
     // set color
 
 
-// toggle cell border
-    // add eventlistener to button
-    // select all divs inside container
-    // loop through and toggle class
+function toggleCellBorder() {
+    const pixels = choosePixel();
+
+    pixels.forEach(child => {
+        child.classList.toggle("border");
+    })
+}
 
 
-// clear grid
-    // add eventlistener to button
-    // select all divs inside container
-    // loop through and set backgroundColor to "lightgray"
+function clearGrid() {
+    const pixels = choosePixel();
+
+    pixels.forEach(child => {
+        child.style.background = "";
+    })
+
+}
 
 

@@ -15,16 +15,20 @@
         
         <div class="container-content">
             <div class="menu">
-                <button>Choose Grid Size</button>
-                <button>Choose Color</button>
-                <button>Rainbow</button>
+                <button id="grid-size">Choose Grid Size</button>
+                <div class="color-picker">
+                    <button>Choose Color</button>
+                    <input type="color" id="choose-color">
+                </div>
+                
+                <button id="rainbow">Rainbow</button>
             </div>
 
             <div id="sketch-area"></div>
 
             <div class="menu">
-                <button>Toggle Cell Border</button>
-                <button>Clear Grid</button>
+                <button id="cell-border">Toggle Cell Border</button>
+                <button id="clear-grid">Clear Grid</button>
             </div>
         </div>
 
