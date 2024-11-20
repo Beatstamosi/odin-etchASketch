@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setGridSize(STARTINGGRIDSIZE);
 
 
-    // choose buttons
+    // set up buttons
     document.querySelector("#grid-size").addEventListener("click", chooseGridSize);
     document.querySelector("#clear-grid").addEventListener("click", clearGrid);
     document.querySelector("#choose-color").addEventListener("change", chooseColor);
