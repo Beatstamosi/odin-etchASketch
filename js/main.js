@@ -1,30 +1,29 @@
-// define starting variables
 // set starting grid size
 const STARTINGGRIDSIZE = 16;
 
 // set starting color
-const startingColor = "white";
+let currentColor = "random";
+
+// give all functions access to sketchArea
 let sketchArea; 
 
 
 document.addEventListener("DOMContentLoaded", () => {
     sketchArea = document.querySelector("#sketch-area");
 
-    // on start
-    // run apply grid size
+    // on start run apply grid size
     setGridSize(STARTINGGRIDSIZE);
 
-
-    // toggle borders on
-    // set color
 
     // choose buttons
     document.querySelector("#grid-size").addEventListener("click", chooseGridSize);
     document.querySelector("#clear-grid").addEventListener("click", clearGrid);
     document.querySelector("#choose-color").addEventListener("change", chooseColor);
     document.querySelector("#cell-border").addEventListener("click", toggleCellBorder);
-    // for each call random color
-    // set box shadow to random color
+    document.querySelector("#rainbow").addEventListener("click", () => {
+        clearGrid();
+        currentColor = "random";
+    })
 });
 
 
@@ -33,6 +32,9 @@ function choosePixel() {
 }
 
 function setGridSize(size) {
+
+    removeGrid();
+
     for (let i = 0; i < size * size; i++) {
         let pixel = document.createElement("div");
         
@@ -57,12 +59,23 @@ function setGridSize(size) {
 
 }
 
+function removeGrid() {
+    const pixels = choosePixel();
 
-function setPixelColor(pixel, color="random") {    
+    pixels.forEach(pixel => pixel.remove());
+}
+
+
+function setPixelColor(pixel) {
+
+    let color = currentColor;
+
+    if (color === "random") {
+        color = generateRandomColorRGB();
+    }
+
     // - Set background color
     if (!pixel.style.background) {
-
-        color = "random" ? generateRandomColorRGB() : color;
         pixel.style.background = `${color}`;
         
     // - Mouseover again darken opacity by 10%
@@ -100,9 +113,15 @@ function generateRandomColorRGB() {
 
 function chooseGridSize() { 
     let value;
-    do {
+
+    while (true) {
         value = prompt("Please input a number between 4 and 100: ");
-    } while (value > 100 || value < 4 || isNaN(value));
+        value = parseInt(value);
+
+        if (value < 100 && value > 4 && !isNaN(value)) {
+            break;
+        }
+    }
 
     clearGrid();
     setGridSize(value);
@@ -114,20 +133,9 @@ function chooseColor() {
 
     // get color value
     let color = document.querySelector("#choose-color").value;
-    console.log(color);
 
     // format color to rgb
-    colorRGBA = hexToRgba(color);
-
-    // change color on hover on pixels
-    const pixels = choosePixel();
-
-    pixels.forEach((pixel => {
-        pixel.addEventListener("mouseover", () => {
-            setPixelColor(pixel, color);
-        });
-    }))
-    
+    currentColor = hexToRgba(color);    
 }
 
 
@@ -138,12 +146,6 @@ function hexToRgba(color) {
 
     return `rgba(${r}, ${g}, ${b}, 0.1)`;
 }
-
-// rainbow
-    // add eventlistener to button
-    // reset choose color
-    // generate random color
-    // set color
 
 
 function toggleCellBorder() {
